@@ -7,6 +7,10 @@ extends Control
 @onready var button_reset = $ButtonReset
 @onready var combat_line = $CombatLine 
 
+@onready var label_attack_total = $LabelAttackTotal
+@onready var label_defense_total = $LabelDefenseTotal
+@onready var label_hazard_warning = $LabelHazardWarning
+
 # On charge la scene du jeton virtuel
 var token_card_scene = preload("res://token_card.tscn")
 
@@ -59,7 +63,7 @@ func _on_button_reset_pressed():
 	
 	# Supprime toutes les cartes de la ligne
 	for child in combat_line.get_children():
-		child.queue_free()
+		child.free()
 	
 	# Met à jour l'affichage
 	update_ui()
@@ -71,6 +75,39 @@ func update_ui():
 	var hazard_count = bag_manager.bag.filter(func(t): return t.token_type == TokenResource.TokenType.HAZARD).size()
 	
 	label_bag_info.text = "📦 Sac: %d jetons (⚔️ %d | 🛡️ %d | 💀 %d)" % [bag_manager.bag.size(), attack_count, defense_count, hazard_count]
+	update_combat_line_totals()
 	
+# Calcule et affiche les totaux de la ligne de combat
+func update_combat_line_totals():
+	var total_attack = 0
+	var total_defense = 0
+	var hazard_count = 0
 	
+	# On parcourt chaque carte présente sur la ligne de combat
+	for card in combat_line.get_children():
+		# On récupère l'icône de la carte pour savoir son type
+		var icon = card.get_node("VBoxContainer/LabelIcon").text
+		# On récupère la valeur de la carte et on la convertit en nombre
+		var value = int(card.get_node("VBoxContainer/LabelValue").text)
+		
+		# On additionne dans le bon compteur selon le type
+		if icon == "⚔️":
+			total_attack += value
+		elif icon == "🛡️":
+			total_defense += value
+		elif icon == "💀":
+			hazard_count += 1
 	
+	# Met à jour le label d'attaque (icône + valeur)
+	label_attack_total.text = "⚔️ %d" % total_attack
+	
+	# Met à jour le label de défense (icône + valeur)
+	label_defense_total.text = "🛡️ %d" % total_defense
+	
+	# Met à jour le label d'avertissement selon le nombre de hazards
+	if hazard_count == 0:
+		label_hazard_warning.text = ""  # Rien à afficher si pas de hazard
+	elif hazard_count == 1:
+		label_hazard_warning.text = "⚠️ 1 Hazard - Attention!"
+	else:  # 2 hazards ou plus
+		label_hazard_warning.text = "💀 CRASH! (%d Hazards)" % hazard_count
