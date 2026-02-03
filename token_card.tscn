@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://sesshgk7bj8m"]
+
+[ext_resource type="Script" uid="uid://b36icqc5ttd1m" path="res://scripts/token_card.gd" id="1_cdf47"]
+
+[node name="TokenCard" type="Panel" unique_id=1329535017]
+custom_minimum_size = Vector2(250, 250)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_cdf47")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=467528974]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.5
+offset_top = -22.5
+offset_right = 81.5
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelIcon" type="Label" parent="VBoxContainer" unique_id=1128863565]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "⚔️ "
+horizontal_alignment = 1
+
+[node name="LabelName" type="Label" parent="VBoxContainer" unique_id=1525452754]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ATTACK"
+horizontal_alignment = 1
+
+[node name="LabelValue" type="Label" parent="VBoxContainer" unique_id=1493386416]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.14509805, 0.14117648, 1)
+theme_override_font_sizes/font_size = 58
+text = "+5"
+horizontal_alignment = 1

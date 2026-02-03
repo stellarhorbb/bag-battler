@@ -1,0 +1,76 @@
+extends Control
+
+# On vient créer des variables et les lier aux différents éléments de l'UI
+@onready var label_bag_info = $LabelBagInfo
+@onready var label_drawn_token = $LabelDrawnToken
+@onready var button_draw = $ButtonDraw
+@onready var button_reset = $ButtonReset
+@onready var combat_line = $CombatLine 
+
+# On charge la scene du jeton virtuel
+var token_card_scene = preload("res://token_card.tscn")
+
+# On importe le noeud de gestionnaire de sac
+var bag_manager = BagManager
+
+func _ready():
+	bag_manager = BagManager.new() # On crée le BagManager
+	add_child(bag_manager)
+	
+	# On charge les jetons
+	var sword = load("res://resources/tokens/basic-sword.tres")
+	var shield = load("res://resources/tokens/shield.tres")
+	var skull = load("res://resources/tokens/hazard.tres")
+	
+	# On rempli le sac de départ pour la classe simple
+	bag_manager.add_tokens(sword, 4)
+	bag_manager.add_tokens(shield, 3)
+	bag_manager.add_tokens(skull, 2)
+	bag_manager.shuffle()
+	
+	# On connecte les boutons aux fonctions. .pressed = Signal émis, .connect = Connecte le signal à une fonction, (...) = la fonction à appelerr
+	button_draw.pressed.connect(_on_button_draw_pressed)
+	button_reset.pressed.connect(_on_button_reset_pressed)
+	# Met à jour l'affichage
+	update_ui()
+
+# Fonction appelée quand on clique sur "Tirer un jeton"
+func _on_button_draw_pressed():
+	var token = bag_manager.draw_token()
+	
+	if token != null:
+		# Met à jour le texte
+		var type_name = TokenResource.TokenType.keys()[token.token_type]
+		label_drawn_token.text = "Dernier jeton tiré: %s (%s, Valeur: %d)" % [token.token_name, type_name, token.value]
+		
+		# Crée une carte visuelle et l'ajoute à la ligne
+		var card = token_card_scene.instantiate() # Crée une nouvelle instance de la carte
+		combat_line.add_child(card) # Ajoute la carte à la ligne de combat (elle apparaît à l'écran)
+		card.setup(token) # Configure la carte avec les données du jeton tiré
+	else:
+		label_drawn_token.text = "⚠️ Le sac est vide !"
+	# Met à jour l'affichage
+	update_ui()
+	
+# Fonction appelée quand on clique sur "Reset"
+func _on_button_reset_pressed():
+	bag_manager.reset_bag()
+	label_drawn_token.text = "Dernier jeton tiré : - "
+	
+	# Supprime toutes les cartes de la ligne
+	for child in combat_line.get_children():
+		child.queue_free()
+	
+	# Met à jour l'affichage
+	update_ui()
+
+# Met à jour l'affichage du nombre de jetons
+func update_ui():
+	var attack_count = bag_manager.bag.filter(func(t): return t.token_type == TokenResource.TokenType.ATTACK).size()
+	var defense_count = bag_manager.bag.filter(func(t): return t.token_type == TokenResource.TokenType.DEFENSE).size()
+	var hazard_count = bag_manager.bag.filter(func(t): return t.token_type == TokenResource.TokenType.HAZARD).size()
+	
+	label_bag_info.text = "📦 Sac: %d jetons (⚔️ %d | 🛡️ %d | 💀 %d)" % [bag_manager.bag.size(), attack_count, defense_count, hazard_count]
+	
+	
+	
