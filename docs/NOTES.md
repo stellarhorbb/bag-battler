@@ -34,3 +34,41 @@
 - Couleurs différentes selon le type (rouge/bleu/gris)
 - Les cartes s'alignent de gauche à droite
 - Disparaissent au reset ✅
+
+**5. Ajout de l'affichage des totaux de combat (Session du soir - 3 février)**
+- Ajouté trois labels distincts dans `bag_ui.tscn` : `LabelAttackTotal` (rouge, gauche), `LabelDefenseTotal` (bleu, droite), `LabelHazardWarning` (orange, centre)
+- Créé la fonction `update_combat_line_totals()` qui calcule et affiche les totaux d'attaque et défense de la ligne de combat
+- Système d'avertissement pour les hazards : vide si aucun, "⚠️ 1 Hazard - Attention!" si un seul, "💀 CRASH!" si deux ou plus
+- Correction bug reset : utilisation de `free()` au lieu de `queue_free()` pour remettre immédiatement les totaux à zéro
+- Les totaux se mettent à jour automatiquement après chaque tirage ✅
+
+## 9 Février 2026
+
+**Système de combat complet ✅**
+- Créé `EnemyResource.gd` et `Enemy.gd` pour gérer les ennemis
+- Ajouté le bouton "EXÉCUTER" pour résoudre le combat
+- Logique de combat fonctionnelle :
+  - Calcul ATTACK et DEFENSE
+  - Système de Crash (2 Hazards = 0 dégâts)
+  - Dégâts infligés à l'ennemi
+  - Réduction des dégâts par la défense
+  - Les jetons retournent dans le sac après chaque tour
+- Premier ennemi créé : Gobelin (20 HP, 5 ATK)
+- Combat testé et fonctionnel !
+
+## 9 Février 2026 (suite)
+
+**Ajout du système de vie du joueur ✅**
+- HP du joueur : 30 HP de base
+- Affichage des HP avec changement de couleur selon l'état
+- Dégâts ennemis appliqués au joueur
+- Système de défaite (Game Over quand HP = 0)
+
+**Amélioration du système de Crash ✅**
+- Le Crash se déclenche IMMÉDIATEMENT au tirage du 2ème Hazard
+- Plus besoin de cliquer sur EXÉCUTER
+- Le joueur prend tous les dégâts sans défense
+- La ligne se vide automatiquement
+- Le tour passe directement à l'ennemi
+
+**Le cœur du gameplay est fonctionnel ! 🎮**

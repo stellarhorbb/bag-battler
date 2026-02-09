@@ -13,15 +13,10 @@ script = ExtResource("1_ip1la")
 
 [node name="LabelTitle" type="Label" parent="." unique_id=1056578449]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -471.0
-offset_bottom = -413.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 42
+offset_right = 488.0
+offset_bottom = 58.0
+scale = Vector2(0.99840045, 1)
+theme_override_font_sizes/font_size = 29
 text = "Bag Battler - Test du Sac"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -32,8 +27,8 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -405.0
-offset_bottom = -360.0
+offset_top = 378.0
+offset_bottom = 423.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 32
@@ -47,14 +42,25 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -142.0
-offset_top = 317.0
-offset_right = 142.0
-offset_bottom = 383.0
+offset_left = -271.0
+offset_top = 214.0
+offset_right = 13.0
+offset_bottom = 280.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.0081645, 0.9962998)
 theme_override_font_sizes/font_size = 42
 text = "Tirer un jeton"
+
+[node name="ButtonExecute" type="Button" parent="." unique_id=951555009]
+layout_mode = 0
+offset_left = 1004.0
+offset_top = 753.0
+offset_right = 1217.0
+offset_bottom = 819.0
+scale = Vector2(1, 0.9992878)
+theme_override_font_sizes/font_size = 42
+text = "Executer"
 
 [node name="ButtonReset" type="Button" parent="." unique_id=822512083]
 layout_mode = 1
@@ -64,9 +70,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -47.0
-offset_top = 395.0
+offset_top = 308.0
 offset_right = 47.0
-offset_bottom = 448.0
+offset_bottom = 361.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.92941177, 0.24313726, 0.105882354, 1)
@@ -112,10 +118,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -456.0
-offset_top = 52.0
-offset_right = -356.0
-offset_bottom = 152.0
+offset_left = -593.0
+offset_top = 933.0
+offset_right = -493.0
+offset_bottom = 1033.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.39215687, 0.39215687, 1)
 theme_override_font_sizes/font_size = 42
@@ -126,10 +132,10 @@ vertical_alignment = 1
 [node name="LabelDefenseTotal" type="Label" parent="." unique_id=611392520]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 0
-offset_left = 1308.0
-offset_top = 49.0
-offset_right = 1408.0
-offset_bottom = 149.0
+offset_left = 1472.0
+offset_top = 929.0
+offset_right = 1572.0
+offset_bottom = 1029.0
 theme_override_colors/font_color = Color(0.09803922, 0.5411765, 1, 1)
 theme_override_font_sizes/font_size = 42
 text = "🛡️ 0"
@@ -148,5 +154,60 @@ offset_right = 50.0
 offset_bottom = 305.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 42
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnemyZone" type="VBoxContainer" parent="." unique_id=971891270]
+custom_minimum_size = Vector2(500, 200)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 56.0
+offset_right = 250.0
+offset_bottom = 256.0
+grow_horizontal = 2
+
+[node name="LabelEnemyName" type="Label" parent="EnemyZone" unique_id=1013805118]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Goblin"
+horizontal_alignment = 1
+
+[node name="LabelEnemyHP" type="Label" parent="EnemyZone" unique_id=1632338886]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.13725491, 0.23137255, 1)
+theme_override_font_sizes/font_size = 24
+text = "HP: 20 / 20"
+horizontal_alignment = 1
+
+[node name="LabelEnemyIntention" type="Label" parent="EnemyZone" unique_id=1516359842]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9529412, 0.4745098, 0.03529412, 1)
+text = "⚔️ Attaque: 5"
+horizontal_alignment = 1
+
+[node name="PlayerHPZone" type="HBoxContainer" parent="." unique_id=543818585]
+custom_minimum_size = Vector2(500, 50)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -80.0
+offset_right = 250.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LabelPlayerHP" type="Label" parent="PlayerHPZone" unique_id=50330458]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.25490198, 1, 0.101960786, 1)
+theme_override_font_sizes/font_size = 24
+text = "❤️ HP: 30 / 30"
 horizontal_alignment = 1
 vertical_alignment = 1
