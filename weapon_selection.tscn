@@ -1,0 +1,140 @@
+[gd_scene format=3 uid="uid://b83gph874w4sr"]
+
+[ext_resource type="Script" uid="uid://s0820tksabdc" path="res://scripts/weapon_selection.gd" id="1_2fi1s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2fi1s"]
+bg_color = Color(0.38009015, 0.2524632, 0.5755956, 1)
+
+[node name="WeaponSelection" type="Control" unique_id=1984351059]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2fi1s")
+
+[node name="Background" type="ColorRect" parent="." unique_id=64672345]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.101960786, 0.101960786, 0.101960786, 1)
+
+[node name="LabelTitle" type="Label" parent="." unique_id=675910048]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -255.5
+offset_top = 121.0
+offset_right = 255.5
+offset_bottom = 188.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48
+text = "Choisissez votre Arme"
+horizontal_alignment = 1
+
+[node name="WeaponCards" type="HBoxContainer" parent="." unique_id=1169305167]
+custom_minimum_size = Vector2(1200, 600)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="SwordCard" type="Panel" parent="WeaponCards" unique_id=1677653946]
+custom_minimum_size = Vector2(350, 600)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2fi1s")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WeaponCards/SwordCard" unique_id=540225593]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -244.0
+offset_top = -197.0
+offset_right = 244.0
+offset_bottom = 197.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Title" type="Label" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=1630667453]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 48
+text = "SWORD"
+horizontal_alignment = 1
+
+[node name="Difficulty" type="Label" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=944773552]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.26666668, 1, 0.2509804, 1)
+theme_override_font_sizes/font_size = 18
+text = "Difficulty: Easy"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=426656433]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="TitleBag" type="Label" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=1536645445]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+text = "Starting Bag:"
+horizontal_alignment = 1
+
+[node name="Composition" type="Label" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=922179950]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+text = "⚔️ x4 Attack
+🛡️ x3 Defense
+💀 x2 Hazards"
+horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=828908294]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="SpecialSkill" type="Label" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=2114833162]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.7607843, 0.2509804, 1)
+theme_override_font_sizes/font_size = 21
+text = "Steady Hand
+Premier tirage sans Hazard"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonSelect" type="Button" parent="WeaponCards/SwordCard/VBoxContainer" unique_id=1907604520]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 39
+text = "SELECT"
+
+[node name="MagicCard" type="Panel" parent="WeaponCards" unique_id=1515031013]
+modulate = Color(0.20392157, 0.20392157, 0.20392157, 0.31764707)
+custom_minimum_size = Vector2(350, 500)
+layout_mode = 2
+
+[node name="DaggerCard" type="Panel" parent="WeaponCards" unique_id=665321008]
+modulate = Color(0.20392157, 0.20392157, 0.20392157, 0.31764707)
+custom_minimum_size = Vector2(350, 500)
+layout_mode = 2

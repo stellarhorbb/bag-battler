@@ -37,16 +37,20 @@ func _ready():
 	bag_manager = BagManager.new()
 	add_child(bag_manager)
 	
-	# Chargement des jetons
-	var sword = load("res://resources/tokens/basic-sword.tres")
-	var shield = load("res://resources/tokens/shield.tres")
-	var skull = load("res://resources/tokens/hazard.tres")
-	
-	# Remplissage du sac de départ
-	bag_manager.add_tokens(sword, 4)
-	bag_manager.add_tokens(shield, 3)
-	bag_manager.add_tokens(skull, 2)
-	bag_manager.shuffle()
+	# Chargement des jetons de base
+	var attack_token = load("res://resources/tokens/attack.tres")
+	var defense_token = load("res://resources/tokens/defense.tres")
+	var hazard_token = load("res://resources/tokens/hazard.tres")
+
+	# Récupère l'arme choisie (ou Knight par défaut si on lance directement la scène)
+	var weapon = GameManager.selected_weapon
+	if weapon == null:
+		weapon = load("res://resources/weapons/sword.tres")
+
+	# Remplissage du sac selon l'arme choisie
+	bag_manager.add_tokens(attack_token, weapon.starting_attack_tokens)
+	bag_manager.add_tokens(defense_token, weapon.starting_defense_tokens)
+	bag_manager.add_tokens(hazard_token, weapon.starting_hazard_tokens)
 	
 	# Création de l'ennemi
 	setup_enemy()

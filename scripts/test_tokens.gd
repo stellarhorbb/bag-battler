@@ -6,8 +6,8 @@ func _ready():
 	print("")
 	
 	# On charge les jetons de puis les fichiers .tres
-	var sword = load("res://resources/tokens/basic-sword.tres")
-	var shield = load("res://resources/tokens/shield.tres")
+	var sword = load("res://resources/tokens/attack.tres")
+	var shield = load("res://resources/tokens/defense.tres")
 	var skull = load("res://resources/tokens/hazard.tres")
 
 	# On crée le sac

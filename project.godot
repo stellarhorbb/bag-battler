@@ -11,14 +11,19 @@ config_version=5
 [application]
 
 config/name="cardGame"
-run/main_scene="uid://j5tbbfvkq2v2"
+run/main_scene="uid://lf417stvktdk"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*uid://ipuqjc0lig0h"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=3
 window/stretch/mode="viewport"
 
 [physics]

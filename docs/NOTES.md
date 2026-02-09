@@ -72,3 +72,24 @@
 - Le tour passe directement à l'ennemi
 
 **Le cœur du gameplay est fonctionnel ! 🎮**
+
+**Système de sélection d'arme et navigation complète ✅**
+
+- Créé `WeaponResource.gd` pour définir les armes (stats, sac de départ, passif)
+- Créé l'arme "Sword" avec : 4 Attack, 3 Defense, 2 Hazards
+- Passif Sword : "Steady Hand - 1er tirage sans Hazard"
+- Renommé les jetons de base pour plus de clarté :
+  - `basic-sword.tres` → `attack.tres`
+  - `shield.tres` → `defense.tres`
+  - `hazard.tres` reste tel quel
+
+**Navigation entre les scènes ✅**
+- Créé `main_menu.tscn` : écran titre avec "Démarrer" et "Options" (disabled)
+- Créé `weapon_selection.tscn` : choix d'arme avec Sword (actif), Mage et Archer (grisés)
+- Créé `game_manager.gd` (autoload) pour stocker l'arme sélectionnée et la progression
+- Flow complet : Menu → Sélection Arme → Combat
+
+**Adaptation du combat ✅**
+- `bag_ui.gd` utilise maintenant l'arme choisie via GameManager
+- Le sac se remplit automatiquement selon les stats de l'arme sélectionnée
+- Définition du menu comme scène principale du projet
