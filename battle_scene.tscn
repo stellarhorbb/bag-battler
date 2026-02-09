@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://j5tbbfvkq2v2"]
 
-[ext_resource type="Script" uid="uid://c6ry6gfdx54gk" path="res://scripts/bag_ui.gd" id="1_ip1la"]
+[ext_resource type="Script" uid="uid://c6ry6gfdx54gk" path="res://scripts/battle_scene.gd" id="1_fw8re"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ip1la"]
 bg_color = Color(0.059185125, 0.46805102, 0.79853326, 1)
@@ -15,7 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ip1la")
+script = ExtResource("1_fw8re")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1162916333]
 layout_mode = 1

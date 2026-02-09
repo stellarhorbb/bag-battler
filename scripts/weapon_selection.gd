@@ -17,4 +17,4 @@ func _on_select_pressed():
 	GameManager.selected_weapon = selected_weapon
 	
 	# On va vers le combat
-	get_tree().change_scene_to_file("res://bag_ui.tscn")
+	get_tree().change_scene_to_file("res://battle_scene.tscn")
