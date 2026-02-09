@@ -29,8 +29,8 @@ var bag_manager = BagManager
 var current_enemy: Enemy
 
 # HP du joueur (AJOUTE CES LIGNES)
-var player_max_hp: int = 30
-var player_current_hp: int = 30
+var player_max_hp: int = 20
+var player_current_hp: int = 20
 
 func _ready():
 	# Création du BagManager
@@ -69,6 +69,10 @@ func setup_enemy() -> void:
 	current_enemy.hp_changed.connect(_on_enemy_hp_changed)
 	current_enemy.intention_changed.connect(_on_enemy_intention_changed)
 	current_enemy.enemy_died.connect(_on_enemy_died)
+	
+	label_enemy_name.text = goblin_data.enemy_name
+	label_enemy_hp.text = "HP: %d / %d" % [current_enemy.current_hp, goblin_data.max_hp]
+	label_enemy_intention.text = "💢 Attaque: %d" % current_enemy.current_damage
 
 # Fonction appelée quand on clique sur "Tirer un jeton"
 func _on_button_draw_pressed():
@@ -155,7 +159,7 @@ func _on_button_execute_pressed():
 	
 	var total_attack = 0
 	var total_defense = 0
-	var hazard_count = 0
+	var _hazard_count = 0
 	var tokens_to_return = []  # Liste des jetons à remettre dans le sac
 	
 	# 1. Calcul des totaux ET récupération des jetons
@@ -185,7 +189,7 @@ func _on_button_execute_pressed():
 		elif icon == "🛡️":
 			total_defense += value
 		elif icon == "💀":
-			hazard_count += 1
+			_hazard_count += 1
 	
 	# 3. Application des dégâts
 	print("Joueur inflige %d dégâts à l'ennemi" % total_attack)
@@ -262,7 +266,7 @@ func update_ui():
 	
 # Met à jour l'affichage des HP du joueur
 func update_player_hp() -> void:
-	label_player_hp.text = "❤️ HP: %d / %d" % [player_current_hp, player_max_hp]
+	label_player_hp.text = "HP: %d / %d" % [player_current_hp, player_max_hp]
 	
 	# Change la couleur selon l'état de santé
 	if player_current_hp <= 0:
@@ -303,7 +307,7 @@ func update_combat_line_totals():
 func _on_enemy_hp_changed(new_hp: int, max_hp: int) -> void:
 	label_enemy_hp.text = "HP: %d / %d" % [new_hp, max_hp]
 
-func _on_enemy_intention_changed(intention_type: String, damage: int) -> void:
+func _on_enemy_intention_changed(_intention_type: String, damage: int) -> void:
 	label_enemy_intention.text = "💢 Attaque: %d" % damage
 
 func _on_enemy_died() -> void:
