@@ -10,6 +10,8 @@ extends Control
 @onready var label_attack_total = $LabelAttackTotal
 @onready var label_defense_total = $LabelDefenseTotal
 @onready var label_hazard_warning = $LabelHazardWarning
+@onready var button_next = $ButtonNext
+@onready var button_back_to_menu = $ButtonBackToMenu
 
 # Références UI Ennemi
 @onready var label_enemy_name = $EnemyZone/LabelEnemyName
@@ -66,17 +68,19 @@ func _ready():
 
 # Fonction pour créer et configurer l'ennemi
 func setup_enemy() -> void:
-	var goblin_data = load("res://resources/enemies/goblin.tres")
+	# Récupère l'ennemi actuel depuis le GameManager
+	var enemy_data = GameManager.get_current_enemy()
+	
 	current_enemy = Enemy.new()
 	add_child(current_enemy)
-	current_enemy.setup(goblin_data)
+	current_enemy.setup(enemy_data)
 	current_enemy.hp_changed.connect(_on_enemy_hp_changed)
 	current_enemy.intention_changed.connect(_on_enemy_intention_changed)
 	current_enemy.enemy_died.connect(_on_enemy_died)
 	
-	label_enemy_name.text = goblin_data.enemy_name
-	label_enemy_hp.text = "HP: %d / %d" % [current_enemy.current_hp, goblin_data.max_hp]
-	label_enemy_intention.text = "💢 Attaque: %d" % current_enemy.current_damage
+	label_enemy_name.text = enemy_data.enemy_name
+	label_enemy_hp.text = "HP: %d / %d" % [current_enemy.current_hp, enemy_data.max_hp]
+	label_enemy_intention.text = "⚔️ %d" % current_enemy.current_damage
 
 # Fonction appelée quand on clique sur "Tirer un jeton"
 func _on_button_draw_pressed():
@@ -120,6 +124,9 @@ func _on_button_draw_pressed():
 				label_drawn_token.text = "💀 DÉFAITE ! Vous avez été vaincu..."
 				button_draw.disabled = true
 				button_execute.disabled = true
+				button_next.visible = false
+				button_back_to_menu.visible = true
+				button_back_to_menu.disabled = false
 				return
 			
 			# L'ennemi prépare sa prochaine intention
@@ -216,6 +223,9 @@ func _on_button_execute_pressed():
 			# On désactive les boutons pour empêcher de continuer
 			button_draw.disabled = true
 			button_execute.disabled = true
+			button_next.visible = false
+			button_back_to_menu.visible = true
+			button_back_to_menu.disabled = false
 			return  # On arrête la fonction ici
 		
 		# Prépare la prochaine intention
@@ -312,8 +322,41 @@ func _on_enemy_hp_changed(new_hp: int, max_hp: int) -> void:
 	label_enemy_hp.text = "HP: %d / %d" % [new_hp, max_hp]
 
 func _on_enemy_intention_changed(_intention_type: String, damage: int) -> void:
-	label_enemy_intention.text = "💢 Attaque: %d" % damage
+	label_enemy_intention.text = "⚔️ Attaque: %d" % damage
 
 func _on_enemy_died() -> void:
 	label_drawn_token.text = "🎉 VICTOIRE ! L'ennemi est vaincu !"
 	print("=== COMBAT TERMINÉ : VICTOIRE ===")
+	
+	# Désactive les boutons de jeu
+	button_draw.disabled = true
+	button_execute.disabled = true
+	
+	# Affiche le bouton "SUITE"
+	button_next.visible = true
+	button_next.disabled = false 
+	
+# Fonction appelée quand on clique sur "SUITE"
+# Fonction appelée quand on clique sur "SUITE"
+func _on_button_next_pressed():
+	print("🚨🚨🚨 FONCTION _on_button_next_pressed APPELÉE ! 🚨🚨🚨")
+	print("🎯 Bouton SUITE cliqué !")
+	print("Ennemi actuel index: ", GameManager.current_enemy_index)
+	
+	# Avance au prochain ennemi
+	GameManager.advance_to_next_enemy()
+	
+	print("Nouvel ennemi index: ", GameManager.current_enemy_index)
+	print("Prochain ennemi: ", GameManager.get_current_enemy().enemy_name)
+	
+	# Recharge la scène de combat
+	print("Rechargement de la scène...")
+	get_tree().reload_current_scene()
+
+# Fonction appelée quand on clique sur "RETOUR AU MENU"
+func _on_button_back_to_menu_pressed():
+	# Reset la run
+	GameManager.reset_run()
+	
+	# Retour au menu principal
+	get_tree().change_scene_to_file("res://main_menu.tscn")

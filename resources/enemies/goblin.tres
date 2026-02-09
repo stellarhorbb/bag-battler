@@ -5,5 +5,4 @@
 [resource]
 script = ExtResource("1_ttibx")
 max_hp = 30
-base_damage = 10
 metadata/_custom_type_script = "uid://dtab3ji4f2ki8"

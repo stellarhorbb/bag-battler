@@ -93,3 +93,21 @@
 - `bag_ui.gd` utilise maintenant l'arme choisie via GameManager
 - Le sac se remplit automatiquement selon les stats de l'arme sélectionnée
 - Définition du menu comme scène principale du projet
+
+## 9 Février 2026 (Session 3 - Soir)
+
+**Système de progression et transitions de combat ✅**
+
+- Créé 3 ennemis avec difficulté croissante :
+  - Goblin (20 HP, 5 ATK)
+  - Goblin Elite (30 HP, 8 ATK)
+  - Orc (40 HP, 10 ATK)
+- Ajouté système de progression dans GameManager avec liste d'ennemis
+- Battle_scene utilise maintenant l'ennemi actuel via GameManager
+- Bouton "SUITE" après victoire → Charge le prochain ennemi
+- Bouton "RETOUR AU MENU" après défaite → Retour au menu principal
+- Fix z-index : boutons dessinés au-dessus de la CombatLine
+- Renommé bag_ui → battle_scene pour meilleure sémantique
+
+**La boucle complète fonctionne ! 🎮**
+Menu → Sélection Arme → Combat → Victoire/Défaite → Progression/Retour

@@ -13,7 +13,7 @@ func setup(token: TokenResource) -> void:
 	match token.token_type:
 		TokenResource.TokenType.ATTACK:
 			label_icon.text = "⚔️"
-			self_modulate = Color("9b001fff")  # Change la couleur de fond de la carte selon le type = Rouge clair 
+			self_modulate = Color("ce002dff")  # Change la couleur de fond de la carte selon le type = Rouge clair 
 		TokenResource.TokenType.DEFENSE:
 			label_icon.text = "🛡️"
 			self_modulate = Color("004397ff")  # Paramètre de couleur = Bleu clair

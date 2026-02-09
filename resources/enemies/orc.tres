@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EnemyResource" format=3 uid="uid://4c5ivl02jqf6"]
+
+[ext_resource type="Script" uid="uid://dtab3ji4f2ki8" path="res://scripts/EnemyResource.gd" id="1_a7y6u"]
+
+[resource]
+script = ExtResource("1_a7y6u")
+enemy_name = "Orc Monster"
+max_hp = 50
+base_damage = 12
+metadata/_custom_type_script = "uid://dtab3ji4f2ki8"
