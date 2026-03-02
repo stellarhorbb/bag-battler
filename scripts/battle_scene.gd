@@ -38,22 +38,13 @@ func _ready():
 	# Création du BagManager
 	bag_manager = BagManager.new()
 	add_child(bag_manager)
-	
-	# Chargement des jetons de base
-	var attack_token = load("res://resources/tokens/attack.tres")
-	var defense_token = load("res://resources/tokens/defense.tres")
-	var hazard_token = load("res://resources/tokens/hazard.tres")
+	var job = GameManager.selected_job
+	if job == null:
+		job = load("res://resources/jobs/knight.tres")
 
-	# Récupère l'arme choisie (ou Knight par défaut si on lance directement la scène)
-	var weapon = GameManager.selected_weapon
-	if weapon == null:
-		weapon = load("res://resources/weapons/sword.tres")
+	for entry in job.starting_bag:
+		bag_manager.add_tokens(entry.token, entry.count)	
 
-	# Remplissage du sac selon l'arme choisie
-	bag_manager.add_tokens(attack_token, weapon.starting_attack_tokens)
-	bag_manager.add_tokens(defense_token, weapon.starting_defense_tokens)
-	bag_manager.add_tokens(hazard_token, weapon.starting_hazard_tokens)
-	
 	# Création de l'ennemi
 	setup_enemy()
 	
@@ -66,21 +57,32 @@ func _ready():
 	update_ui()
 	update_player_hp()
 
-# Fonction pour créer et configurer l'ennemi
+# Fonction pour créer et configurer l'entité ennemie
 func setup_enemy() -> void:
-	# Récupère l'ennemi actuel depuis le GameManager
-	var enemy_data = GameManager.get_current_enemy()
+	var stats = GameManager.get_current_stats()
 	
 	current_enemy = Enemy.new()
 	add_child(current_enemy)
+	
+	# Crée une EnemyResource à la volée depuis les stats du round
+	var enemy_data = EnemyResource.new()
+	enemy_data.enemy_name = "The Entity"
+	enemy_data.max_hp = stats.hp
+	enemy_data.base_damage = stats.atk
+	
 	current_enemy.setup(enemy_data)
 	current_enemy.hp_changed.connect(_on_enemy_hp_changed)
 	current_enemy.intention_changed.connect(_on_enemy_intention_changed)
 	current_enemy.enemy_died.connect(_on_enemy_died)
 	
-	label_enemy_name.text = enemy_data.enemy_name
-	label_enemy_hp.text = "HP: %d / %d" % [current_enemy.current_hp, enemy_data.max_hp]
-	label_enemy_intention.text = "⚔️ %d" % current_enemy.current_damage
+	# Affichage
+	var ante = GameManager.get_current_ante()
+	var round_in_ante = GameManager.get_round_in_ante()
+	label_enemy_name.text = "Ante %d — Round %d" % [ante, round_in_ante]
+	if GameManager.is_boss_round():
+		label_enemy_name.text += " ★ BOSS"
+	label_enemy_hp.text = "HP: %d / %d" % [stats.hp, stats.hp]
+	label_enemy_intention.text = "⚔️ %d" % stats.atk
 
 # Fonction appelée quand on clique sur "Tirer un jeton"
 func _on_button_draw_pressed():
@@ -168,83 +170,46 @@ func _on_button_draw_pressed():
 func _on_button_execute_pressed():
 	print("=== PHASE D'EXÉCUTION ===")
 	
-	var total_attack = 0
-	var total_defense = 0
-	var _hazard_count = 0
-	var tokens_to_return = []  # Liste des jetons à remettre dans le sac
+	var cards = combat_line.get_children()
+	var result = TokenEffectResolver.resolve(cards)
 	
-	# 1. Calcul des totaux ET récupération des jetons
-	for card in combat_line.get_children():
-		var icon = card.get_node("VBoxContainer/LabelIcon").text
-		var value = int(card.get_node("VBoxContainer/LabelValue").text)
-		
-		# Trouve le jeton correspondant
-		for token in bag_manager.initial_bag:
-			if token.value == value:
-				var type_match = false
-				match icon:
-					"⚔️":
-						type_match = (token.token_type == TokenResource.TokenType.ATTACK)
-					"🛡️":
-						type_match = (token.token_type == TokenResource.TokenType.DEFENSE)
-					"💀":
-						type_match = (token.token_type == TokenResource.TokenType.HAZARD)
-				
-				if type_match:
-					tokens_to_return.append(token)
-					break
-		
-		# Calcul des totaux
-		if icon == "⚔️":
-			total_attack += value
-		elif icon == "🛡️":
-			total_defense += value
-		elif icon == "💀":
-			_hazard_count += 1
+	# Dégâts au joueur
+	print("Joueur inflige %d dégâts à l'ennemi" % result.total_attack)
+	current_enemy.take_damage(result.total_attack)
 	
-	# 3. Application des dégâts
-	print("Joueur inflige %d dégâts à l'ennemi" % total_attack)
-	current_enemy.take_damage(total_attack)
-	
-	# 4. Attaque ennemie (si pas mort)
 	if current_enemy.current_hp > 0:
-		var incoming_damage = max(0, current_enemy.current_damage - total_defense)
-		print("Ennemi attaque pour %d (défense joueur: %d) = %d dégâts reçus" % [current_enemy.current_damage, total_defense, incoming_damage])
+		var base_damage = current_enemy.current_damage
+		var modified_damage = roundi(base_damage * result.damage_multiplier)
+		var incoming_damage = max(0, modified_damage - result.total_defense)
 		
-		# Applique les dégâts au joueur
+		print("Ennemi attaque pour %d (défense: %d) = %d dégâts reçus" % [modified_damage, result.total_defense, incoming_damage])
+		
 		player_current_hp -= incoming_damage
-		player_current_hp = max(player_current_hp, 0)  # Ne descend pas en dessous de 0
+		player_current_hp = max(player_current_hp, 0)
 		update_player_hp()
 		
-		# Vérifie si le joueur est mort
 		if player_current_hp <= 0:
-			print("💀 DÉFAITE ! Le joueur est mort !")
+			print("💀 DÉFAITE !")
 			label_drawn_token.text = "💀 DÉFAITE ! Vous avez été vaincu..."
-			# On désactive les boutons pour empêcher de continuer
 			button_draw.disabled = true
 			button_execute.disabled = true
 			button_next.visible = false
 			button_back_to_menu.visible = true
 			button_back_to_menu.disabled = false
-			return  # On arrête la fonction ici
+			return
 		
-		# Prépare la prochaine intention
 		current_enemy.prepare_next_intention()
 	
-	# 5. Suppression des cartes visuelles
+	# Nettoyage et remise des jetons
+	for card in cards:
+		bag_manager.bag.append(card.token_data)
+	
 	for child in combat_line.get_children():
 		child.queue_free()
 	
-	# 6. Remise des jetons dans le sac
-	for token in tokens_to_return:
-		bag_manager.bag.append(token)
-	
-	# 7. Mélange du sac
 	bag_manager.shuffle()
-	
 	print("=== FIN DU TOUR ===")
 	print("")
-	
 	update_ui()
 	
 # Fonction appelée quand on clique sur "Reset"
@@ -292,23 +257,36 @@ func update_player_hp() -> void:
 
 # Calcule et affiche les totaux de la ligne de combat
 func update_combat_line_totals():
-	var total_attack = 0
-	var total_defense = 0
+	var cards = combat_line.get_children()
+	
+	if cards.is_empty():
+		label_attack_total.text = "⚔️ 0"
+		label_defense_total.text = "🛡️ 0"
+		label_hazard_warning.text = ""
+		label_enemy_intention.text = "⚔️ %d" % current_enemy.current_damage
+		label_enemy_intention.modulate = Color(1, 0.39, 0.39)  # Rouge normal
+		return
+	
+	var result = TokenEffectResolver.resolve(cards)
+	
+	# Totaux joueur
+	label_attack_total.text = "⚔️ %d" % result.total_attack
+	label_defense_total.text = "🛡️ %d" % result.total_defense
+	
+	# Dégâts ennemis modifiés dynamiquement
+	var modified_damage = roundi(current_enemy.current_damage * result.damage_multiplier)
+	if result.damage_multiplier < 1.0:
+		label_enemy_intention.text = "⚔️ %d → %d 🟣" % [current_enemy.current_damage, modified_damage]
+		label_enemy_intention.modulate = Color(0.3, 1, 0.3)  # Vert = bonne nouvelle !
+	else:
+		label_enemy_intention.text = "⚔️ %d" % current_enemy.current_damage
+		label_enemy_intention.modulate = Color(1, 0.39, 0.39)  # Rouge normal
+	
+	# Hazards
 	var hazard_count = 0
-	
-	for card in combat_line.get_children():
-		var icon = card.get_node("VBoxContainer/LabelIcon").text
-		var value = int(card.get_node("VBoxContainer/LabelValue").text)
-		
-		if icon == "⚔️":
-			total_attack += value
-		elif icon == "🛡️":
-			total_defense += value
-		elif icon == "💀":
+	for card in cards:
+		if card.token_data.token_type == TokenResource.TokenType.HAZARD:
 			hazard_count += 1
-	
-	label_attack_total.text = "⚔️ %d" % total_attack
-	label_defense_total.text = "🛡️ %d" % total_defense
 	
 	if hazard_count == 0:
 		label_hazard_warning.text = ""
@@ -339,18 +317,24 @@ func _on_enemy_died() -> void:
 # Fonction appelée quand on clique sur "SUITE"
 # Fonction appelée quand on clique sur "SUITE"
 func _on_button_next_pressed():
-	print("🚨🚨🚨 FONCTION _on_button_next_pressed APPELÉE ! 🚨🚨🚨")
-	print("🎯 Bouton SUITE cliqué !")
-	print("Ennemi actuel index: ", GameManager.current_enemy_index)
+	print("=== ROUND SUIVANT ===")
+	print("Round actuel : %d (Ante %d — Round %d)" % [
+		GameManager.current_round,
+		GameManager.get_current_ante(),
+		GameManager.get_round_in_ante()
+	])
 	
-	# Avance au prochain ennemi
-	GameManager.advance_to_next_enemy()
+	GameManager.advance_round()
 	
-	print("Nouvel ennemi index: ", GameManager.current_enemy_index)
-	print("Prochain ennemi: ", GameManager.get_current_enemy().enemy_name)
+	print("Nouveau round : %d (Ante %d — Round %d)" % [
+		GameManager.current_round,
+		GameManager.get_current_ante(),
+		GameManager.get_round_in_ante()
+	])
+	if GameManager.is_boss_round():
+		print("⚠️ Prochain round = BOSS !")
+	print("")
 	
-	# Recharge la scène de combat
-	print("Rechargement de la scène...")
 	get_tree().reload_current_scene()
 
 # Fonction appelée quand on clique sur "RETOUR AU MENU"

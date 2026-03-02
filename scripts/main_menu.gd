@@ -12,4 +12,4 @@ func _on_start_pressed():
 	GameManager.reset_run()
 	
 	# On va vers la sélection d'arme
-	get_tree().change_scene_to_file("res://weapon_selection.tscn")
+	get_tree().change_scene_to_file("res://job_selection.tscn")

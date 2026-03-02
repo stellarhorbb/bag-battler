@@ -1,0 +1,15 @@
+﻿Name,Accessible,Assignee,Due date,Effect,Rarity,Status,Type,Value
+Strike,Default,,02/03/2025,Deals Base Damage to the Enemy,Rare,Idea,Attack,Base Damage
+Frenzy,Default,,,Deals Base Damage × number of ATK tokens already on the line,,Idea,Attack,Base Damage × n
+Guard,Default,,,Absorbs Base Defense from incoming damage,,Idea,Defense,Base Defense
+Rampart,Default,,,Absorbs Base Defense × 2 only if it's the last token executed,,Idea,Defense,Base Defense × 2
+Heal,Default,,,Restores 8 HP to the player when executed,,Idea,Utility,+8 HP
+Echo,Default,,,Duplicates the effect of the token immediately to its left,,Idea,Modifyers,/
+Purge,Default,,,Immediately removes the leftmost Hazard from the line,,Idea,Cleanser,/
+Backstab,Assassin,,,Base Damage ×3 if drawn 1st ; No token after → Base Damage ×5,,Idea,Attack,
+,,,,,,Idea,,
+Provocation,Knight,,,Entity -25% damage ; 1st → -75% damage,,Idea,Modifyers,
+Catalyst,Mage,,,Doubles next token drawn ; 1st → doubles next 2 tokens,,Idea,Modifyers,
+Fortify,Knight,,,Each DEF token on line gains +1 Base Defense this turn,,Idea,Defense,
+Reckless,Assassin,,,Each ATTACK token on line gains +1 Base Damage this turn,,Idea,Attack,
+Resonance,Mage,,,Base Damage × nb of different token types on line. No effect if any duplicate,,Idea,Attack,

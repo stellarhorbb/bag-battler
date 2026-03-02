@@ -1,32 +1,30 @@
 extends Node
 
-# L'arme sélectionnée par le joueur
-var selected_weapon: WeaponResource = null
+var selected_job: JobResource = null
+var current_round: int = 1
 
-# Index de l'ennemi actuel (pour la progression)
-var current_enemy_index: int = 0
+# Charge la progression de l'entité
+var entity_progression: EntityProgressionResource = preload("res://resources/entity/entity_progression.tres")
 
-# Liste des ennemis dans l'ordre de progression
-var enemy_list: Array[EnemyResource] = []
+func reset_run() -> void:
+	selected_job = null
+	current_round = 1
 
-func _ready():
-	# Charge la liste d'ennemis
-	enemy_list = [
-		load("res://resources/enemies/goblin.tres"),
-		load("res://resources/enemies/goblin_elite.tres"),
-		load("res://resources/enemies/orc.tres")
-	]
+# Retourne les stats du round actuel
+func get_current_stats() -> RoundStatsResource:
+	return entity_progression.get_stats(current_round)
 
-func reset_run():
-	selected_weapon = null
-	current_enemy_index = 0
+# Ante affiché au joueur (calculé automatiquement)
+func get_current_ante() -> int:
+	return ceil(current_round / 4.0)
 
-func get_current_enemy() -> EnemyResource:
-	if current_enemy_index < enemy_list.size():
-		return enemy_list[current_enemy_index]
-	else:
-		# Si on a battu tous les ennemis, on boucle sur le dernier
-		return enemy_list[enemy_list.size() - 1]
+# Round dans l'ante (1, 2, 3 ou 4)
+func get_round_in_ante() -> int:
+	return ((current_round - 1) % 4) + 1
 
-func advance_to_next_enemy():
-	current_enemy_index += 1
+# C'est un boss si c'est le 4ème round de l'ante
+func is_boss_round() -> bool:
+	return get_round_in_ante() == 4
+
+func advance_round() -> void:
+	current_round += 1

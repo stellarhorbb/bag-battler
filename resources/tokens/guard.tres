@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="TokenResource" format=3 uid="uid://cbyktbnocsciv"]
 
-[ext_resource type="Script" uid="uid://cgmlktf00g143" path="res://scripts/TokenResource.gd" id="1_3jlm4"]
+[ext_resource type="Script" uid="uid://cgmlktf00g143" path="res://scripts/TokenResource.gd" id="1_js6tn"]
 
 [resource]
-script = ExtResource("1_3jlm4")
-token_name = "Defense"
+script = ExtResource("1_js6tn")
+token_name = "Guard"
 token_type = 1
 value = 5
 metadata/_custom_type_script = "uid://cgmlktf00g143"

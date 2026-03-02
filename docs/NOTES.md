@@ -111,3 +111,69 @@
 
 **La boucle complète fonctionne ! 🎮**
 Menu → Sélection Arme → Combat → Victoire/Défaite → Progression/Retour
+
+## 2 Mars 2026 — Session 1 : Refactor Architecture & Système d'Antes
+
+**Refactoring terminologie : Weapon → Job ✅**
+- `WeaponResource.gd` renommé/remplacé par `JobResource.gd`
+- Tous les fichiers `.tres` et références mis à jour
+- Terminologie cohérente avec le GDD (Knight, Mage, Assassin)
+
+**Système de progression Antes & Rounds ✅**
+- Créé `RoundStatsResource.gd` : stats par round (HP entité, ATK entité)
+- Créé `EntityProgressionResource.gd` : liste de rounds pour la progression complète
+- Numérotation des rounds : continu 1 → N (Ante calculé automatiquement : `(round - 1) / 4 + 1`)
+- `GameManager` mis à jour : `current_round`, `advance_to_next_round()`, `get_current_round_stats()`
+- Affichage UI : "Ante 1 — Round 1" ✅
+
+**Refactoring sac de départ (JobResource) ✅**
+- Créé `StartingTokenEntry` (inner class) : `token: TokenResource` + `count: int`
+- `JobResource.starting_bag` = Array de `StartingTokenEntry`
+- Remplacement du remplissage hardcodé dans `battle_scene.gd` par une boucle sur `starting_bag`
+- Knight configuré : Strike ×3, Guard ×2, Provocation ×1, Rampart ×1, Hazard ×2
+
+**Extension des types de jetons ✅**
+- Ajout des types : `MODIFIER` (🟣), `UTILITY` (🟡), `CLEANSER` (⬜)
+- `token_card.gd` mis à jour avec les couleurs et icônes correspondantes
+
+**Écran de sélection de Job dynamique ✅**
+- `job_selection.gd` : affichage dynamique de la composition du sac depuis `selected_job.starting_bag`
+- Plus de texte hardcodé dans la scène
+
+---
+
+## 2 Mars 2026 — Session 2 : Système d'Effets Modulaire
+
+**Architecture d'effets modulaire ✅**
+
+Problème résolu : éviter le code spaghetti dans `battle_scene.gd` pour les effets de jetons.
+
+Structure mise en place :
+```
+scripts/effects/BaseEffect.gd        → Classe parent, méthode apply() vide
+scripts/effects/CombatContext.gd     → Contexte passé à chaque effet (cards, index, is_first, is_last, result)
+scripts/effects/ResolveResult.gd     → Résultat modifié par les effets (total_attack, total_defense, damage_multiplier, rampart_active)
+scripts/effects/EffectProvocation.gd → Logique Provocation isolée
+scripts/effects/EffectRampart.gd     → Logique Rampart isolée
+scripts/TokenEffectResolver.gd       → Orchestre la résolution, mappe enum → classes d'effet
+```
+
+**TokenEffect enum ajouté à TokenResource ✅**
+- `TokenEffect` : NONE, PROVOCATION, RAMPART
+- `@export var effect: TokenEffect` sur chaque jeton
+
+**Effets implémentés ✅**
+
+*Provocation :*
+- Position 1 (premier tiré) : `damage_multiplier = 0.25` → ennemi inflige 25% de ses dégâts
+- Autre position : `damage_multiplier = 0.75` → ennemi inflige 75% de ses dégâts
+
+*Rampart :*
+- Actif seulement si dernier jeton de la ligne au moment d'Exécuter
+- Double toute la défense accumulée sur la ligne (résolution en deux passes)
+
+**Preview dynamique des dégâts ennemis ✅**
+- `update_combat_line_totals()` appelle `TokenEffectResolver.resolve()` en temps réel
+- `label_enemy_intention` se met à jour à chaque tirage
+- Si Provocation active : affichage `⚔️ 10 → 3 🟣` en vert
+- Sans effet : affichage normal en rouge

@@ -47,19 +47,27 @@ func draw_token() -> TokenResource:
 	if bag.is_empty():
 		print("Le sac est vide")
 		return null
-		
-	# On génère un nombre aléatoire très grand, l'opérateur % donne les reste de la division	
-	var random_index = randi() % bag.size()
-	var drawn_token = bag[random_index]
-	
-	# On retire le jeton du sac
-	bag.remove_at(random_index)
-	
-	# On converti le type du token en nom (ATTACK, DEFENSE ...), puis on affiche le message
+
+	# Prêt pour les poids — pour l'instant tous à 1.0 donc tirage purement aléatoire
+	var total_weight = 0.0
+	for token in bag:
+		total_weight += token.weight
+
+	var random_value = randf() * total_weight
+	var cumulative = 0.0
+
+	var drawn_token: TokenResource = null
+	for token in bag:
+		cumulative += token.weight
+		if random_value <= cumulative:
+			drawn_token = token
+			break
+
+	bag.erase(drawn_token)
+
 	var type_name = TokenResource.TokenType.keys()[drawn_token.token_type]
 	print("Tiré : %s (%s), il reste %d jetons dans le sac" % [drawn_token.token_name, type_name, bag.size()])
-	
-	# puis on retourne le jeton tiré (pour pouvoir l'utiliser)
+
 	return drawn_token
 
 # Enfin, on remélange le sac

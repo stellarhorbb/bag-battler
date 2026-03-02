@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bcywnkk6b4qwn"
+
+[deps]
+
+files=["res://docs/Private & Shared/chips-bdd.Accessible.translation", "res://docs/Private & Shared/chips-bdd.en.translation", "res://docs/Private & Shared/chips-bdd.Due date.translation", "res://docs/Private & Shared/chips-bdd.Effect.translation", "res://docs/Private & Shared/chips-bdd.Rarity.translation", "res://docs/Private & Shared/chips-bdd.Status.translation", "res://docs/Private & Shared/chips-bdd.Type.translation", "res://docs/Private & Shared/chips-bdd.Value.translation"]
+
+source_file="res://docs/Private & Shared/chips-bdd.csv"
+dest_files=["res://docs/Private & Shared/chips-bdd.Accessible.translation", "res://docs/Private & Shared/chips-bdd.en.translation", "res://docs/Private & Shared/chips-bdd.Due date.translation", "res://docs/Private & Shared/chips-bdd.Effect.translation", "res://docs/Private & Shared/chips-bdd.Rarity.translation", "res://docs/Private & Shared/chips-bdd.Status.translation", "res://docs/Private & Shared/chips-bdd.Type.translation", "res://docs/Private & Shared/chips-bdd.Value.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
